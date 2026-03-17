@@ -281,6 +281,7 @@ h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; color: va
       <h3 id="email-heading"></h3>
       <p class="lead">Renseignez votre email pour recevoir votre guide personnalisé.</p>
       <div class="email-form">
+        <input type="text" class="email-input" id="name-input" placeholder="Susie" required>
         <input type="email" class="email-input" id="email-input" placeholder="susiedoe@gmail.com" required>
         <p class="email-error" id="email-error">Veuillez entrer un email valide.</p>
         <button class="btn-primary" id="btn-submit" onclick="submitEmail()" style="width:100%">Recevoir mon guide</button>
@@ -479,26 +480,28 @@ function calculateScores() {
 //  EMAIL SUBMIT
 // ═══════════════════════════════════════════
 async function submitEmail() {
+  const nameInput = document.getElementById('name-input');
   const input = document.getElementById('email-input');
   const errorEl = document.getElementById('email-error');
   const btn = document.getElementById('btn-submit');
+  const name = nameInput.value.trim();
   const email = input.value.trim();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    input.classList.add('invalid');
-    errorEl.style.display = 'block';
-    return;
-  }
+  let hasError = false;
+  if (!name) { nameInput.classList.add('invalid'); hasError = true; } else { nameInput.classList.remove('invalid'); }
+  if (!emailRegex.test(email)) { input.classList.add('invalid'); hasError = true; } else { input.classList.remove('invalid'); }
+  if (hasError) { errorEl.style.display = 'block'; errorEl.textContent = !name ? 'Veuillez entrer votre prénom.' : 'Veuillez entrer un email valide.'; return; }
 
-  input.classList.remove('invalid');
   errorEl.style.display = 'none';
+  state.name = name;
   state.email = email;
   btn.disabled = true;
   btn.textContent = 'Envoi en cours…';
 
   // Build payload
   const payload = {
+    name: state.name,
     email: state.email,
     dominant_dimension: DIMENSIONS[state.dominantIndex].key,
     dominant_dimension_label: DIMENSIONS[state.dominantIndex].label,
