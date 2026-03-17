@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quel est votre schéma amoureux dominant ?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --night: #0a0f1e;
+  --night-light: #131a2e;
+  --night-card: #1a2240;
+  --gold: #c9a84c;
+  --gold-light: #d4b96a;
+  --violet: #8b5cf6;
+  --violet-light: #a78bfa;
+  --violet-dim: rgba(139,92,246,0.15);
+  --text: #e8e4f0;
+  --text-light: #9a95a8;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--night);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 1rem;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold); }
+
+.screen { display: none !important; animation: fadeIn 0.5s ease; }
+.screen.active { display: block !important; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Welcome ── */
+#screen-welcome { text-align: center; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100dvh - 4rem); }
+#screen-welcome.active { display: flex !important; }
+#screen-welcome h1 { font-size: 2rem; line-height: 1.25; margin-bottom: 1.25rem; }
+#screen-welcome .subtitle {
+  font-size: 1.05rem; line-height: 1.7; color: var(--text-light);
+  max-width: 480px; margin: 0 auto 2.5rem;
+}
+.btn-primary {
+  display: inline-block; background: var(--gold); color: var(--night);
+  font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1rem;
+  padding: 1rem 2.5rem; border: none; border-radius: 10px; cursor: pointer;
+  transition: background 0.2s, transform 0.15s; letter-spacing: 0.02em;
+}
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+/* ── Quiz ── */
+#screen-quiz { padding-top: 2rem; }
+#screen-quiz.active { display: flex !important; flex-direction: column; min-height: calc(100dvh - 4rem); }
+#screen-quiz .question-card { margin-top: auto; margin-bottom: auto; }
+
+.progress-wrap { margin-bottom: 1.75rem; }
+.progress-label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.8rem; color: var(--text-light); margin-bottom: 0.5rem;
+  font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase;
+}
+.progress-bar {
+  width: 100%; height: 6px; background: var(--night-card);
+  border-radius: 3px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--violet); border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.question-card {
+  background: var(--night-card); border-radius: 16px; padding: 2.5rem 2rem;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2); border: 1px solid rgba(139,92,246,0.1);
+  animation: cardIn 0.4s ease;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.question-text {
+  font-family: 'Playfair Display', serif; font-size: 1.2rem;
+  font-weight: 500; line-height: 1.55; color: var(--gold); margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.answers {
+  display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap;
+}
+.answer-btn {
+  width: 56px; height: 56px; border-radius: 50%; border: 2px solid rgba(139,92,246,0.25);
+  background: var(--night-light); font-family: 'Inter', sans-serif; font-size: 1rem;
+  font-weight: 600; color: var(--text); cursor: pointer;
+  transition: all 0.2s ease; position: relative;
+}
+.answer-btn:hover { border-color: var(--violet); background: var(--violet-dim); }
+.answer-btn.selected {
+  border-color: var(--violet); background: var(--violet); color: #fff;
+  transform: scale(1.1);
+}
+
+.answer-labels {
+  display: flex; justify-content: space-between;
+  font-size: 0.7rem; color: var(--text-light); margin-top: 0.75rem;
+  padding: 0 0.25rem;
+}
+
+.nav-row { display: flex; justify-content: flex-start; margin-top: 1.5rem; }
+.btn-back {
+  background: none; border: none; color: var(--text-light); font-family: 'Inter', sans-serif;
+  font-size: 0.85rem; cursor: pointer; padding: 0.5rem 0;
+  transition: color 0.2s;
+}
+.btn-back:hover { color: var(--violet-light); }
+
+/* ── Email ── */
+#screen-email { text-align: center; padding-top: 4rem; }
+#screen-email h2 { font-size: 1.75rem; margin-bottom: 0.75rem; }
+#screen-email .lead {
+  font-size: 1rem; color: var(--text-light); line-height: 1.65;
+  margin-bottom: 2rem; max-width: 440px; margin-left: auto; margin-right: auto;
+}
+.email-form { max-width: 400px; margin: 0 auto; }
+.email-input {
+  width: 100%; padding: 1rem 1.25rem; border: 2px solid rgba(139,92,246,0.25);
+  border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 1rem;
+  background: var(--night-light); color: var(--text); margin-bottom: 1rem;
+  transition: border-color 0.2s; outline: none;
+}
+.email-input:focus { border-color: var(--violet); }
+.email-input.invalid { border-color: #c0392b; }
+.email-error {
+  font-size: 0.8rem; color: #c0392b; margin-top: -0.5rem;
+  margin-bottom: 0.75rem; display: none;
+}
+.privacy-note {
+  font-size: 0.75rem; color: var(--text-light); margin-top: 1rem;
+  line-height: 1.5;
+}
+
+/* ── Results ── */
+#screen-results { padding-top: 3rem; }
+#screen-results h2 { font-size: 1.6rem; text-align: center; margin-bottom: 0.5rem; }
+.results-subtitle {
+  text-align: center; font-size: 0.95rem; color: var(--text-light);
+  margin-bottom: 2.5rem; line-height: 1.5;
+}
+
+.results-card {
+  background: var(--night-card); border-radius: 16px; padding: 2rem;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2); border: 1px solid rgba(139,92,246,0.1); margin-bottom: 1.5rem;
+}
+
+.dominant-badge {
+  display: inline-block; background: var(--violet-dim); color: var(--gold);
+  font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.75rem;
+  padding: 0.4rem 1rem; border-radius: 8px; letter-spacing: 0.05em;
+  border: 1px solid rgba(139,92,246,0.3);
+  text-transform: uppercase; margin-bottom: 1.5rem;
+}
+
+.dim-row { margin-bottom: 1.25rem; }
+.dim-row:last-child { margin-bottom: 0; }
+.dim-header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 0.4rem;
+}
+.dim-label { font-size: 0.85rem; font-weight: 500; color: var(--text); }
+.dim-label.is-dominant { color: var(--gold); font-weight: 700; }
+.dim-score { font-size: 0.8rem; color: var(--text-light); }
+.dim-bar {
+  height: 10px; background: rgba(139,92,246,0.1); border-radius: 5px; overflow: hidden;
+}
+.dim-bar-fill {
+  height: 100%; border-radius: 5px; background: rgba(139,92,246,0.1);
+  transition: width 1s ease, background 0.3s;
+}
+.dim-bar-fill.is-dominant { background: var(--gold); }
+.dim-bar-fill.is-normal { background: var(--violet); opacity: 0.4; }
+
+.mbti-card {
+  background: var(--night-card); border-radius: 16px; padding: 2rem;
+  text-align: center; color: var(--text); border: 1px solid rgba(139,92,246,0.15);
+}
+.mbti-type {
+  font-family: 'Playfair Display', serif; font-size: 2rem;
+  color: var(--gold); margin-bottom: 0.5rem;
+}
+.mbti-desc { font-size: 0.9rem; line-height: 1.6; opacity: 0.85; }
+
+.email-section {
+  background: var(--night-card); border-radius: 16px; padding: 2rem;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2); border: 1px solid rgba(139,92,246,0.1); margin-top: 1.5rem;
+  text-align: center;
+}
+.email-section h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+.email-section .lead { font-size: 0.95rem; color: var(--text-light); margin-bottom: 1.5rem; line-height: 1.5; }
+
+.confirmation-msg {
+  background: var(--violet-dim); color: var(--gold); border: 1px solid rgba(139,92,246,0.3); border-radius: 16px;
+  padding: 1.5rem 2rem; margin-top: 1.5rem; text-align: center;
+  font-weight: 500; animation: fadeIn 0.5s ease;
+}
+
+@media (max-width: 480px) {
+  body { padding: 1.25rem 0.75rem; }
+  #screen-welcome { padding-top: 3rem; }
+  #screen-welcome h1 { font-size: 1.6rem; }
+  .question-card { padding: 2rem 1.25rem; }
+  .question-text { font-size: 1.05rem; }
+  .answer-btn { width: 48px; height: 48px; font-size: 0.9rem; }
+  .results-card, .mbti-card { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ═══ Screen 1 : Welcome ═══ -->
+  <div id="screen-welcome" class="screen active">
+    <h1>Quel est votre schéma<br>amoureux dominant&nbsp;?</h1>
+    <p class="subtitle">
+      30 questions profondes pour révéler vos dynamiques relationnelles inconscientes
+      — et comprendre enfin pourquoi vous aimez comme vous aimez.
+    </p>
+    <button class="btn-primary" onclick="startQuiz()">Commencer le quiz</button>
+  </div>
+
+  <!-- ═══ Screen 2 : Quiz ═══ -->
+  <div id="screen-quiz" class="screen">
+    <div class="question-card" id="question-card">
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="progress-text">Question 1 / 30</span>
+          <span id="progress-pct">3%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+      <p class="question-text" id="question-text"></p>
+      <div class="answers" id="answers"></div>
+      <div class="answer-labels">
+        <span>Pas du tout</span><span>Tout à fait</span>
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" id="btn-back" onclick="prevQuestion()">← Précédent</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ Screen 3 : Results + Email ═══ -->
+  <div id="screen-results" class="screen">
+    <h2>Bravo ! Votre profil est prêt.</h2>
+    <p class="results-subtitle">Voici un aperçu de vos schémas relationnels.</p>
+    <div class="results-card" id="results-card"></div>
+    <div class="mbti-card" id="mbti-card"></div>
+
+    <div class="email-section">
+      <h3 id="email-heading"></h3>
+      <p class="lead">Renseignez votre email pour recevoir votre guide personnalisé.</p>
+      <div class="email-form">
+        <input type="email" class="email-input" id="email-input" placeholder="susiedoe@gmail.com" required>
+        <p class="email-error" id="email-error">Veuillez entrer un email valide.</p>
+        <button class="btn-primary" id="btn-submit" onclick="submitEmail()" style="width:100%">Recevoir mon guide</button>
+        <p class="privacy-note">Vos données restent confidentielles. Aucun spam, juste votre guide personnalisé.</p>
+      </div>
+    </div>
+
+    <div class="confirmation-msg" id="confirmation-msg" style="display:none">
+      <p>Merci ! Vérifiez votre boîte mail dans 2 minutes.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  CONFIGURATION
+// ═══════════════════════════════════════════
+const WEBHOOK_URL = 'https://hook.eu2.make.com/VOTRE_WEBHOOK_ID';
+
+// ═══════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════
+const DIMENSIONS = [
+  { key: 'idealisation', label: 'Idéalisation' },
+  { key: 'toxicite',     label: 'Tolérance à la toxicité' },
+  { key: 'fusion',       label: 'Fusion émotionnelle' },
+  { key: 'sacrifice',    label: 'Sacrifice de soi' },
+  { key: 'validation',   label: 'Validation externe' },
+];
+
+const QUESTIONS = [
+  // Dimension 0 — Idéalisation
+  { id: 1,  dim: 0, text: "Je tombe amoureuse du \"potentiel\" d'une personne plutôt que de ce qu'elle me montre réellement au présent." },
+  { id: 2,  dim: 0, text: "Au début d'une relation, j'ai tendance à ignorer les signaux d'alarme parce que je suis focalisée sur notre connexion \"unique\"." },
+  { id: 3,  dim: 0, text: "Je me crée souvent des scénarios romantiques très détaillés sur notre futur avant même que la relation ne soit solide." },
+  { id: 4,  dim: 0, text: "Je suis convaincue que mon amour et ma compréhension peuvent \"guérir\" ou transformer les parts d'ombre de mon partenaire." },
+  { id: 5,  dim: 0, text: "Je compare souvent la réalité de ma relation à un idéal de \"flamme jumelle\" ou d'âme sœur." },
+  { id: 6,  dim: 0, text: "Quand mon partenaire me déçoit, je cherche des excuses pour maintenir l'image parfaite que j'ai de lui." },
+  // Dimension 1 — Tolérance à la toxicité
+  { id: 7,  dim: 1, text: "Je reste dans une relation car je me sens responsable du bien-être ou de la survie émotionnelle de l'autre." },
+  { id: 8,  dim: 1, text: "J'ai déjà accepté des comportements que je jugerais inacceptables pour une amie." },
+  { id: 9,  dim: 1, text: "Je minimise le manque de respect en me disant que l'autre \"a eu une enfance difficile\" ou \"ne le pense pas vraiment\"." },
+  { id: 10, dim: 1, text: "Je préfère le chaos d'une relation intense mais instable au \"vide\" d'une relation calme et saine." },
+  { id: 11, dim: 1, text: "Je me sens incapable de partir tant que je n'ai pas la preuve absolue que j'ai \"tout essayé\"." },
+  { id: 12, dim: 1, text: "La peur de l'abandon est plus forte que l'inconfort que je ressens dans ma relation actuelle." },
+  // Dimension 2 — Fusion émotionnelle
+  { id: 13, dim: 2, text: "Si mon partenaire est de mauvaise humeur, mon propre état émotionnel s'effondre instantanément." },
+  { id: 14, dim: 2, text: "J'ai du mal à savoir ce que je veux ou ce que je ressens vraiment quand je suis en couple." },
+  { id: 15, dim: 2, text: "Je me sens \"vide\" ou incomplète lorsque je ne suis pas en interaction constante avec l'autre." },
+  { id: 16, dim: 2, text: "Je prends les critiques faites à mon partenaire comme si elles m'étaient directement adressées." },
+  { id: 17, dim: 2, text: "J'ai tendance à abandonner mes propres hobbies ou amis pour adopter ceux de mon partenaire." },
+  { id: 18, dim: 2, text: "La frontière entre mes émotions et celles de mon partenaire est quasi inexistante." },
+  // Dimension 3 — Sacrifice de soi
+  { id: 19, dim: 3, text: "Je fais passer les besoins de mon partenaire avant les miens, même si cela me coûte ma santé ou mon énergie." },
+  { id: 20, dim: 3, text: "Je dis \"oui\" à ses demandes alors que tout mon corps a envie de dire \"non\"." },
+  { id: 21, dim: 3, text: "Je me sens coupable dès que je prends du temps pour moi ou que je pose une limite." },
+  { id: 22, dim: 3, text: "Je suis celle qui fournit 90 % de l'effort émotionnel pour faire fonctionner le couple." },
+  { id: 23, dim: 3, text: "J'ai l'impression que je dois \"mériter\" l'amour en étant la plus utile ou la plus compréhensive possible." },
+  { id: 24, dim: 3, text: "Je m'oublie totalement dans le but de rendre la vie de l'autre plus facile." },
+  // Dimension 4 — Validation externe
+  { id: 25, dim: 4, text: "Mon estime de moi dépend entièrement de l'attention ou des compliments que mon partenaire me donne." },
+  { id: 26, dim: 4, text: "Je pose souvent des questions pour me rassurer sur le fait que je suis \"assez\" bien pour lui/elle." },
+  { id: 27, dim: 4, text: "Une simple critique de mon partenaire peut remettre en question toute ma valeur personnelle." },
+  { id: 28, dim: 4, text: "J'ai besoin que mon entourage valide mon choix de partenaire pour me sentir en sécurité." },
+  { id: 29, dim: 4, text: "Je reste dans une relation toxique car j'ai peur de ce que les autres penseront de mon \"échec\"." },
+  { id: 30, dim: 4, text: "Sans le regard admiratif d'un partenaire, j'ai l'impression de ne pas exister." },
+];
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+const state = {
+  currentQuestion: 0,
+  answers: new Array(30).fill(null),
+  scores: [0, 0, 0, 0, 0],
+  dominantIndex: 0,
+  mbtiTendency: 'INFJ',
+  email: '',
+};
+
+let transitioning = false;
+
+// ═══════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function startQuiz() {
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+// ═══════════════════════════════════════════
+//  QUIZ RENDERING
+// ═══════════════════════════════════════════
+function renderQuestion() {
+  const q = QUESTIONS[state.currentQuestion];
+  const num = state.currentQuestion + 1;
+  const pct = Math.round((num / 30) * 100);
+
+  document.getElementById('progress-text').textContent = `Question ${num} / 30`;
+  document.getElementById('progress-pct').textContent = `${pct}%`;
+  document.getElementById('progress-fill').style.width = `${pct}%`;
+  document.getElementById('question-text').textContent = q.text;
+  document.getElementById('btn-back').style.display = state.currentQuestion === 0 ? 'none' : 'inline-block';
+
+  // Re-trigger card animation
+  const card = document.getElementById('question-card');
+  card.style.animation = 'none';
+  card.offsetHeight; // force reflow
+  card.style.animation = '';
+
+  const answersEl = document.getElementById('answers');
+  answersEl.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = i;
+    if (state.answers[state.currentQuestion] === i) btn.classList.add('selected');
+    btn.addEventListener('click', () => selectAnswer(i));
+    answersEl.appendChild(btn);
+  }
+}
+
+function selectAnswer(value) {
+  if (transitioning) return;
+  transitioning = true;
+
+  state.answers[state.currentQuestion] = value;
+
+  // Visual feedback
+  document.querySelectorAll('.answer-btn').forEach(btn => {
+    btn.classList.toggle('selected', parseInt(btn.textContent) === value);
+  });
+
+  setTimeout(() => {
+    if (state.currentQuestion < 29) {
+      state.currentQuestion++;
+      renderQuestion();
+    } else {
+      calculateScores();
+      showResults();
+    }
+    transitioning = false;
+  }, 400);
+}
+
+function prevQuestion() {
+  if (state.currentQuestion > 0) {
+    state.currentQuestion--;
+    renderQuestion();
+  }
+}
+
+// ═══════════════════════════════════════════
+//  KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('screen-quiz').classList.contains('active')) return;
+  const key = parseInt(e.key);
+  if (key >= 1 && key <= 5) selectAnswer(key);
+});
+
+// ═══════════════════════════════════════════
+//  SCORING
+// ═══════════════════════════════════════════
+function calculateScores() {
+  state.scores = [0, 0, 0, 0, 0];
+  for (let i = 0; i < 30; i++) {
+    const dim = QUESTIONS[i].dim;
+    state.scores[dim] += state.answers[i] || 0;
+  }
+
+  // Dominant dimension
+  let maxScore = 0;
+  state.dominantIndex = 0;
+  for (let i = 0; i < 5; i++) {
+    if (state.scores[i] > maxScore) {
+      maxScore = state.scores[i];
+      state.dominantIndex = i;
+    }
+  }
+
+  // MBTI tendency
+  const infjScore = state.scores[0] + state.scores[3]; // Idéalisation + Sacrifice
+  const infpScore = state.scores[2] + state.scores[4]; // Fusion + Validation
+  state.mbtiTendency = infpScore > infjScore ? 'INFP' : 'INFJ';
+}
+
+// ═══════════════════════════════════════════
+//  EMAIL SUBMIT
+// ═══════════════════════════════════════════
+async function submitEmail() {
+  const input = document.getElementById('email-input');
+  const errorEl = document.getElementById('email-error');
+  const btn = document.getElementById('btn-submit');
+  const email = input.value.trim();
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    input.classList.add('invalid');
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  input.classList.remove('invalid');
+  errorEl.style.display = 'none';
+  state.email = email;
+  btn.disabled = true;
+  btn.textContent = 'Envoi en cours…';
+
+  // Build payload
+  const payload = {
+    email: state.email,
+    dominant_dimension: DIMENSIONS[state.dominantIndex].key,
+    dominant_dimension_label: DIMENSIONS[state.dominantIndex].label,
+    total_score: state.scores.reduce((a, b) => a + b, 0),
+    dimension_scores: {},
+    mbti_tendency: state.mbtiTendency,
+  };
+  DIMENSIONS.forEach((d, i) => { payload.dimension_scores[d.key] = state.scores[i]; });
+
+  // Send to webhook
+  try {
+    await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (err) {
+    console.warn('Webhook error (confirmation shown anyway):', err);
+  }
+
+  document.querySelector('.email-section').style.display = 'none';
+  document.getElementById('confirmation-msg').style.display = 'block';
+}
+
+// Allow Enter to submit email
+document.getElementById('email-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') submitEmail();
+});
+
+// ═══════════════════════════════════════════
+//  RESULTS SCREEN
+// ═══════════════════════════════════════════
+function showResults() {
+  const card = document.getElementById('results-card');
+  const dominant = DIMENSIONS[state.dominantIndex];
+
+  let html = `<div style="text-align:center"><span class="dominant-badge">Schéma dominant : ${dominant.label}</span></div>`;
+
+  DIMENSIONS.forEach((d, i) => {
+    const score = state.scores[i];
+    const pct = Math.round((score / 30) * 100);
+    const isDom = i === state.dominantIndex;
+    html += `
+      <div class="dim-row">
+        <div class="dim-header">
+          <span class="dim-label ${isDom ? 'is-dominant' : ''}">${d.label}</span>
+          <span class="dim-score">${score} / 30</span>
+        </div>
+        <div class="dim-bar">
+          <div class="dim-bar-fill ${isDom ? 'is-dominant' : 'is-normal'}" style="width:0%" data-target="${pct}"></div>
+        </div>
+      </div>`;
+  });
+
+  card.innerHTML = html;
+
+  // MBTI card
+  const mbtiCard = document.getElementById('mbti-card');
+  const mbtiDescriptions = {
+    INFJ: "Tendance <strong>INFJ</strong> (Ni-Fe) — Vous vous perdez dans une vision idéalisée du futur et dans le besoin profond de préserver l'harmonie, quitte à vous sacrifier.",
+    INFP: "Tendance <strong>INFP</strong> (Fi-Ne) — Vous êtes portée par l'intensité de vos sentiments et la quête d'un alignement émotionnel parfait, au risque de vous dissoudre dans l'autre.",
+  };
+  mbtiCard.innerHTML = `
+    <div class="mbti-type">${state.mbtiTendency}</div>
+    <p class="mbti-desc">${mbtiDescriptions[state.mbtiTendency]}</p>`;
+
+  // Email heading with dominant dimension
+  document.getElementById('email-heading').innerHTML =
+    `Pour recevoir un guide sur votre schéma dominant «&nbsp;${dominant.label}&nbsp;»`;
+
+  showScreen('screen-results');
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.dim-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.target + '%';
+    });
+  }, 100);
+}
+</script>
+</body>
+</html>
