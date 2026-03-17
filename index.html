@@ -217,6 +217,7 @@ h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; color: va
   text-align: center;
 }
 .email-section h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+.field-label { display: block; font-size: 0.85rem; font-weight: 500; color: var(--text-light); margin-bottom: 0.4rem; text-align: left; }
 .email-section .lead { font-size: 0.95rem; color: var(--text-light); margin-bottom: 1.5rem; line-height: 1.5; }
 
 .confirmation-msg {
@@ -281,7 +282,9 @@ h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; color: va
       <h3 id="email-heading"></h3>
       <p class="lead">Renseignez votre email pour recevoir votre guide personnalisé.</p>
       <div class="email-form">
+        <label class="field-label" for="name-input">Votre prénom</label>
         <input type="text" class="email-input" id="name-input" placeholder="Susie" required>
+        <label class="field-label" for="email-input">Votre mail</label>
         <input type="email" class="email-input" id="email-input" placeholder="susiedoe@gmail.com" required>
         <p class="email-error" id="email-error">Veuillez entrer un email valide.</p>
         <button class="btn-primary" id="btn-submit" onclick="submitEmail()" style="width:100%">Recevoir mon guide</button>
